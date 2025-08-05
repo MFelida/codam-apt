@@ -1,8 +1,9 @@
 #!/bin/bash
 
+CAPT_DIR="${HOME}/sgoinfre/.capt"
 echo "Creating directories..."
-mkdir -p ${HOME}/.capt/root
-mkdir -p ${HOME}/.capt/debs_temp
+mkdir -p ${CAPT_DIR}/root
+mkdir -p ${CAPT_DIR}/debs_temp
 
 echo "Creating installer script..."
 cat <<"EOF" >${HOME}/.capt/capt
@@ -14,7 +15,7 @@ if [[ $1 == "install" ]]; then
 	echo "Downloading prerequisites..."
 	apt-get download $(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances $2 | grep "^\w" | sort -u)
 	echo "Installing..."
-	find . -iname "*.deb" -type f -exec dpkg -x {} ${HOME}/.capt/root \;
+	find . -iname "*.deb" -type f -exec dpkg -x {} ${CAPT_DIR}/root \;
 	echo "Finished installing, removing temp files..."
 	rm -rf *.deb
 	echo "Done"
@@ -25,7 +26,7 @@ fi
 EOF
 
 echo "Setting executable bit on \`capt\` executable..."
-chmod +x ${HOME}/.capt/capt
+chmod +x ${CAPT_DIR}/capt
 
 echo "Adding stuff to zshrc"
 cat <<EOF >>${HOME}/.zshrc
