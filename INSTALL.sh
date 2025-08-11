@@ -6,14 +6,15 @@ mkdir -p ${CAPT_DIR}/root
 mkdir -p ${CAPT_DIR}/debs_temp
 
 echo "Creating installer script..."
-cat <<"EOF" >${CAPT_DIR}/capt
+cat <<EOF >${CAPT_DIR}/capt
 #!/bin/bash
 
+CAPT_DIR="${CAPT_DIR}"
 cd ${CAPT_DIR}/debs_temp
 rm -rf *.deb
-if [[ $1 == "install" ]]; then
+if [[ \$1 == "install" ]]; then
 	echo "Downloading prerequisites..."
-	apt-get download $(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances $2 | grep "^\w" | sort -u)
+	apt-get download \$(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances \$2 | grep "^\w" | sort -u)
 	echo "Installing..."
 	find . -iname "*.deb" -type f -exec dpkg -x {} ${CAPT_DIR}/root \;
 	echo "Finished installing, removing temp files..."
